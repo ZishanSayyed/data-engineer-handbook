@@ -11,7 +11,12 @@
 --- Add 2 More class 
 -- CREATE TYPE scoring_class as ENUM ('star','good','avg','bad');
 
--- --- Creating Player Table:
+-- DROPing DATA TYPE
+-- DROP TYPE IF EXISTS scoring_class CASCADE;
+-- DROP TYPE IF EXISTS season_stats CASCADE;
+
+-- DROP TABLE players
+-- - Creating Player Table:
 
 -- CREATE TABLE players (
 --     player_name TEXT,
@@ -25,13 +30,14 @@
 --     current_season INTEGER,
 --     scoring_class scoring_class,
 --     years_since_last_season  INTEGER,
+--     is_active BOOLEAN,
 --     PRIMARY KEY (player_name, current_season)
     
 
 -- );
 
 --Check values in players table 
---SELECT * FROM players
+-- SELECT * FROM players
 
 --- Data Piple line Query Where we append data in nested form form 1995 t0 2001 
 -- we have used 2 table 1 as today which content latest data
@@ -47,17 +53,18 @@
 --     seasons_stats,
 --     scoring_class,
 --     years_since_last_season,
+--     is_active,
 --     current_season
 -- )
 
 -- WITH 
 -- yesterday AS (
 --     SELECT * FROM players 
---     WHERE current_season = 2000
+--     WHERE current_season = 2020
 -- ),
 -- today AS (
 --     SELECT * FROM player_seasons
---     WHERE season = 2001
+--     WHERE season = 2021
 -- )
 -- SELECT 
 --     COALESCE(t.player_name, y.player_name) AS player_name,
@@ -102,15 +109,18 @@
 --          END as scoring_class, 
 
 --     CASE WHEN t.season IS NOT NULL  THEN 0 
---     ELSE  y.years_since_last_season,0 + 1 END as years_since_last_season,
+--     ELSE  y.years_since_last_season + 1 END as years_since_last_season,
+--     t.season IS NOT NULL as is_active,
 
 --     COALESCE(t.season, y.current_season + 1) AS current_season
 -- FROM today t
 -- FULL OUTER JOIN yesterday y
 -- ON t.player_name = y.player_name;
 
+
+
 ---- EXtracting All the NESTED Data Form season_data Array 
--- SELECT * FROM players WHERE current_season = 2001
+-- SELECT * FROM players WHERE current_season = 2021
 -- AND player_name = 'Michael Jordan';
 
 -- SELECT 
@@ -131,16 +141,16 @@
 
 
 --- Check the player improvment 
-SELECT  
-    player_name,
-    (seasons_stats[CARDINALITY(seasons_stats)]::seasons_stats).pts / 
-    CASE 
-        WHEN (seasons_stats[1]::seasons_stats).pts = 0 THEN 1 
-        ELSE (seasons_stats[1]::seasons_stats).pts 
-    END AS pts_ratio
-FROM players
-WHERE current_season=2001 AND scoring_class='star'
-ORDER BY 2 DESC;
+-- SELECT  
+--     player_name,
+--     (seasons_stats[CARDINALITY(seasons_stats)]::seasons_stats).pts / 
+--     CASE 
+--         WHEN (seasons_stats[1]::seasons_stats).pts = 0 THEN 1 
+--         ELSE (seasons_stats[1]::seasons_stats).pts 
+--     END AS pts_ratio
+-- FROM players
+-- WHERE current_season=2001 AND scoring_class='star'
+-- ORDER BY 2 DESC;
 
 
 
