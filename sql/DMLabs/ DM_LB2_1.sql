@@ -6,12 +6,20 @@
 --                     end_season INTEGER
 --                         )
 
+
+/* using the SCD table we create all the possible groups that can 
+be occurred 
+
+*/
+
+-- 1st player with same current season same as end season 
 WITH last_season_scd AS (
       SELECT * FROM players_scd_table
       WHERE current_season=2021
       AND end_season = 2021
 ),
 
+--- 2nd player with who ended their career before the current season
 historical_season_scd AS (
       SELECT 
       player_name,
@@ -25,11 +33,13 @@ historical_season_scd AS (
       AND end_season < 2021
 ),
 
+--- current season 
 this_season_scd AS (
       SELECT * FROM players_scd_table
       WHERE current_season=2022
 ),
 
+-- recodes which are unchanged 
  unchanged_records AS (
          SELECT
                 ts.player_name,
@@ -43,7 +53,9 @@ this_season_scd AS (
          WHERE ts.scoring_class = ls.scoring_class
          AND ts.is_active = ls.is_active
      ),
- 
+/* calculating the changes for this we have to created a nested arrays
+ that will keep hold of all changes 
+*/ 
 changed_records AS (
         SELECT
                 ts.player_name,
@@ -69,6 +81,7 @@ changed_records AS (
           OR ts.is_active <> ls.is_active)
      ),
 
+-- unnesting the nested changed record 
 unnested_changed_records AS (
 
          SELECT player_name,
@@ -94,6 +107,7 @@ new_records AS (
 
      )
 
+-- uninon of all sets 
 SELECT *, 2022 AS current_season FROM (
                   SELECT *
                   FROM historical_season_scd

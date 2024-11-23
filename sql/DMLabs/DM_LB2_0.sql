@@ -58,7 +58,7 @@ SELECT
 
 --  FROM with_previous
 
---- insted of 2 sperate indicotor creating 1 common indicator 
+--- instead of 2 separate indictor creating 1 common indicator 
 
 --- 2nd window function is to see the how often change occurred in previous_sc and previous_is_active
 with_indicator AS (
@@ -69,7 +69,7 @@ with_indicator AS (
        ELSE 0 END as  change_indicator       
  FROM with_previous),
 
---- 3rd window function is to flaten table more based on change_indicator
+--- 3rd window function is to flatten table more based on change_indicator
  with_streaks AS (SELECT * ,
        SUM(change_indicator) OVER (PARTITION BY player_name ORDER BY current_season) as streak_identifier
  FROM with_indicator)
@@ -87,10 +87,10 @@ with_indicator AS (
  ORDER BY player_name
 
 
-------- Porblem with this form too many windows 
-------- we have to do to many window function without curnching data
+------- Problem with this form too many windows 
+------- we have to do to many window function without crunching data
 
--- this query is purn of outof memmory problem and 
--- but if we have over streak changes too often then rows will increament drastically
+-- this query is Prun of out-of memory problem and 
+-- but if we have over streak changes too often then rows will increment drastically
 
 

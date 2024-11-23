@@ -39,7 +39,7 @@
 --Check values in players table 
 -- SELECT * FROM players
 
---- Data Piple line Query Where we append data in nested form form 1995 t0 2001 
+--- Data Pipe line Query Where we append data in nested form form 1995 t0 2001 
 -- we have used 2 table 1 as today which content latest data
 -- Other is yesterday which contain data till last update
 
@@ -74,7 +74,7 @@
 --     COALESCE(t.draft_year, y.draft_year) AS draft_year,
 --     COALESCE(t.draft_round, y.draft_round) AS draft_round,
 --     CASE 
---     -- 1st case when season year is null then we create intial value 
+--     -- 1st case when season year is null then we create initial value 
 --         WHEN y.seasons_stats IS NULL THEN 
 --             ARRAY[ROW(
 --                 t.season,
@@ -94,7 +94,7 @@
 --                 t.ast,
 --                 t.weight
 --             )::seasons_stats]
---     -- if last years data exisit then holding up that value  
+--     -- if last years data exist then holding up that value  
 --         ELSE 
 --             y.seasons_stats
 --     END AS seasons_stats,
@@ -136,11 +136,11 @@
 -- WHERE current_season = 2001
 --  -- AND player_name = 'Michael Jordan';
 
--- DROP Tabel
+-- DROP Table
 --DROP TABLE players;
 
 
---- Check the player improvment 
+--- Check the player improvement 
 -- SELECT  
 --     player_name,
 --     (seasons_stats[CARDINALITY(seasons_stats)]::seasons_stats).pts / 
